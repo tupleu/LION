@@ -1,0 +1,113 @@
+root@dd894a86c8a7:/mnt/c/Users/asus/Documents/GitHub/LION# ./script/train_vae.sh 1
+utils/utils.py: USE_COMET=1, USE_WB=0
+2024-04-24 05:04:07.721 | INFO     | __main__:get_args:207 - EXP_ROOT: ../exp + exp name: 0424/car/7d96ech_hvae_lion_B4, save dir: ../exp/0424/car/7d96ech_hvae_lion_B4
+2024-04-24 05:04:07.742 | INFO     | __main__:get_args:212 - save config at ../exp/0424/car/7d96ech_hvae_lion_B4/cfg.yml
+2024-04-24 05:04:07.742 | INFO     | __main__:get_args:215 - log dir: ../exp/0424/car/7d96ech_hvae_lion_B4
+2024-04-24 05:04:07.743 | INFO     | utils.utils:init_processes:1133 - set MASTER_PORT: 127.0.0.1, MASTER_PORT: 6020
+2024-04-24 05:04:07.743 | INFO     | utils.utils:init_processes:1154 - init_process: rank=0, world_size=1
+2024-04-24 05:04:07.772 | INFO     | __main__:main:29 - use trainer: trainers.hvae_trainer
+Using /root/.cache/torch_extensions as PyTorch extensions root...
+Detected CUDA files, patching ldflags
+Emitting ninja build file /root/.cache/torch_extensions/emd_ext/build.ninja...
+Building extension module emd_ext...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+ninja: no work to do.
+Loading extension module emd_ext...
+load emd_ext time: 0.091s
+Using /root/.cache/torch_extensions as PyTorch extensions root...
+Detected CUDA files, patching ldflags
+Emitting ninja build file /root/.cache/torch_extensions/_pvcnn_backend/build.ninja...
+Building extension module _pvcnn_backend...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+ninja: no work to do.
+Loading extension module _pvcnn_backend...
+2024-04-24 05:04:10.880 | INFO     | utils.utils:common_init:467 - [common-init] at rank=0, seed=1
+2024-04-24 05:04:10.881 | INFO     | utils.utils:__init__:332 - Not init TFB
+2024-04-24 05:04:10.881 | INFO     | utils.utils:common_init:511 - [common-init] DONE
+2024-04-24 05:04:10.916 | INFO     | utils.model_helper:import_model:106 - import: models.shapelatent_modules.PointNetPlusEncoder
+2024-04-24 05:04:10.952 | INFO     | models.shapelatent_modules:__init__:29 - [Encoder] zdim=128, out_sigma=True; force_att: 0
+2024-04-24 05:04:10.952 | INFO     | utils.model_helper:import_model:106 - import: models.latent_points_ada.PointTransPVC
+2024-04-24 05:04:10.998 | INFO     | models.latent_points_ada:__init__:38 - [Build Unet] extra_feature_channels=0, input_dim=3
+2024-04-24 05:04:11.123 | INFO     | utils.model_helper:import_model:106 - import: models.latent_points_ada.LatentPointDecPVC
+2024-04-24 05:04:11.123 | INFO     | models.latent_points_ada:__init__:241 - [Build Dec] point_dim=3, context_dim=1
+2024-04-24 05:04:11.124 | INFO     | models.latent_points_ada:__init__:38 - [Build Unet] extra_feature_channels=1, input_dim=3
+2024-04-24 05:04:11.326 | INFO     | models.vae_adain:__init__:50 - [Build Model] style_encoder: models.shapelatent_modules.PointNetPlusEncoder, encoder: models.latent_points_ada.PointTransPVC, decoder: models.latent_points_ada.LatentPointDecPVC
+2024-04-24 05:04:15.296 | INFO     | trainers.hvae_trainer:__init__:53 - broadcast_params: device=cuda:0
+2024-04-24 05:04:15.297 | INFO     | trainers.base_trainer:build_other_module:712 - no other module to build
+2024-04-24 05:04:15.298 | INFO     | trainers.base_trainer:build_data:152 - start build_data
+2024-04-24 05:04:17.189 | INFO     | datasets.pointflow_datasets:get_datasets:371 - get_datasets: tr_sample_size=2048,  te_sample_size=2048;  random_subsample=1 normalize_global=True normalize_std_per_axix=False normalize_per_shape=False recenter_per_shape=False
+searching: pointflow, get: ./data/ShapeNetCore.v2.PC15k/
+2024-04-24 05:04:17.193 | INFO     | datasets.pointflow_datasets:__init__:118 - [DATA] cat: car, split: train, full path: ./data/ShapeNetCore.v2.PC15k/; norm global=True, norm-box=False
+2024-04-24 05:04:17.233 | INFO     | datasets.pointflow_datasets:__init__:168 - [DATA] number of file [2458] under: ./data/ShapeNetCore.v2.PC15k/02958343/train 
+2024-04-24 05:04:59.432 | INFO     | datasets.pointflow_datasets:__init__:190 - [DATA] Load data time: 42.2s | dir: ['02958343'] | sample_with_replacement: 1; num points: 2458
+2024-04-24 05:05:00.876 | INFO     | datasets.pointflow_datasets:__init__:256 - [DATA] normalize_global: mean=[0.00131747 0.00735971 0.02350355], std=[0.1634924]
+2024-04-24 05:05:10.020 | INFO     | datasets.pointflow_datasets:__init__:263 - [DATA] shape=(2458, 15000, 3), all_points_mean:=(1, 1, 3), std=(1, 1, 1), max=4.166, min=-4.333; num-pts=2048
+searching: pointflow, get: ./data/ShapeNetCore.v2.PC15k/
+2024-04-24 05:05:10.064 | INFO     | datasets.pointflow_datasets:__init__:118 - [DATA] cat: car, split: val, full path: ./data/ShapeNetCore.v2.PC15k/; norm global=True, norm-box=False
+2024-04-24 05:05:10.094 | INFO     | datasets.pointflow_datasets:__init__:168 - [DATA] number of file [352] under: ./data/ShapeNetCore.v2.PC15k/02958343/val 
+2024-04-24 05:05:16.461 | INFO     | datasets.pointflow_datasets:__init__:190 - [DATA] Load data time: 6.4s | dir: ['02958343'] | sample_with_replacement: 1; num points: 352
+2024-04-24 05:05:16.595 | INFO     | datasets.pointflow_datasets:__init__:263 - [DATA] shape=(352, 15000, 3), all_points_mean:=(1, 1, 3), std=(1, 1, 1), max=4.002, min=-4.059; num-pts=2048
+2024-04-24 05:05:16.611 | INFO     | datasets.pointflow_datasets:get_data_loaders:440 - [Batch Size] train=4, test=10; drop-last=1
+2024-04-24 05:05:16.645 | INFO     | trainers.hvae_trainer:__init__:75 - done init trainer @cuda:0
+2024-04-24 05:05:17.133 | INFO     | trainers.base_trainer:prepare_vis_data:676 - [prepare_vis_data] len of train_loader: 614
+2024-04-24 05:05:17.376 | INFO     | trainers.base_trainer:prepare_vis_data:691 - tr_x: torch.Size([16, 2048, 3]), m_pcs: torch.Size([16, 1, 3]), s_pcs: torch.Size([16, 1, 1]), val_x: torch.Size([16, 2048, 3])
+2024-04-24 05:05:17.406 | INFO     | __main__:main:46 - param size = 22.402731M 
+2024-04-24 05:05:17.407 | INFO     | trainers.base_trainer:set_writer:57 -
+----------
+[url]: none
+../exp/0424/car/7d96ech_hvae_lion_B4
+----------
+2024-04-24 05:05:17.417 | INFO     | __main__:main:68 - not find any checkpoint: ../exp/0424/car/7d96ech_hvae_lion_B4/checkpoints, (exist=False), or snapshot ../exp/0424/car/7d96ech_hvae_lion_B4/checkpoints/snapshot, (exist=False)
+2024-04-24 05:05:17.417 | INFO     | trainers.base_trainer:train_epochs:173 - [rank=0] Start epoch: 0 End epoch: 8000, batch-size=4 | Niter/epo=614 | log freq=614, viz freq 245600, val freq 200 
+2024-04-24 05:05:35.748 | INFO     | trainers.common_fun:validate_inspect_noprior:104 - writer: none
+2024-04-24 05:06:18.012 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E0 iter[ 44/614] | [Loss] 77.27 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]    44 | [url] none 
+2024-04-24 05:07:18.565 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E0 iter[107/614] | [Loss] 45.93 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   107 | [url] none 
+2024-04-24 05:08:18.734 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E0 iter[166/614] | [Loss] 35.30 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   166 | [url] none 
+2024-04-24 05:09:19.526 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E0 iter[227/614] | [Loss] 28.97 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   227 | [url] none 
+2024-04-24 05:10:19.843 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E0 iter[290/614] | [Loss] 24.90 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   290 | [url] none 
+2024-04-24 05:11:20.397 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E0 iter[353/614] | [Loss] 22.18 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   353 | [url] none 
+2024-04-24 05:12:20.871 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E0 iter[416/614] | [Loss] 20.16 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   416 | [url] none 
+2024-04-24 05:13:21.447 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E0 iter[479/614] | [Loss] 18.63 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   479 | [url] none 
+2024-04-24 05:14:21.919 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E0 iter[542/614] | [Loss] 17.47 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   542 | [url] none 
+2024-04-24 05:15:22.304 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E0 iter[605/614] | [Loss] 16.60 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   605 | [url] none 
+2024-04-24 05:15:30.052 | INFO     | trainers.base_trainer:train_epochs:256 - [R0] | E0 iter[613/614] | [Loss] 16.51 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   613 | [url] none | [time] 10.2m (~1361h) |[best] 0 -100.000x1e-2 
+/opt/conda/lib/python3.8/site-packages/torch/optim/lr_scheduler.py:154: UserWarning: The epoch parameter in `scheduler.step()` was not necessary and is being deprecated where possible. Please use `scheduler.step()` to step the scheduler. During the deprecation, if epoch is different from None, the closed form is used instead of the new chainable form, where available. Please open an issue if you are unable to replicate your use case: https://github.com/pytorch/pytorch/issues/new/choose.
+  warnings.warn(EPOCH_DEPRECATION_WARNING, UserWarning)
+/opt/conda/lib/python3.8/site-packages/torch/optim/lr_scheduler.py:247: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  warnings.warn("To get the last learning rate computed by the scheduler, "
+2024-04-24 05:16:30.372 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E1 iter[ 61/614] | [Loss] 9.73 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   675 | [url] none 
+2024-04-24 05:17:30.711 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E1 iter[124/614] | [Loss] 10.09 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   738 | [url] none 
+2024-04-24 05:18:31.314 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E1 iter[186/614] | [Loss] 10.40 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   800 | [url] none 
+2024-04-24 05:19:31.629 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E1 iter[247/614] | [Loss] 10.72 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   861 | [url] none 
+2024-04-24 05:20:32.223 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E1 iter[310/614] | [Loss] 11.07 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   924 | [url] none 
+2024-04-24 05:21:32.917 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E1 iter[373/614] | [Loss] 11.42 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]   987 | [url] none 
+2024-04-24 05:22:33.536 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E1 iter[436/614] | [Loss] 11.78 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]  1050 | [url] none 
+2024-04-24 05:23:34.176 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E1 iter[499/614] | [Loss] 12.13 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]  1113 | [url] none 
+2024-04-24 05:24:34.566 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E1 iter[562/614] | [Loss] 12.49 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]  1176 | [url] none 
+2024-04-24 05:25:23.844 | INFO     | trainers.base_trainer:train_epochs:256 - [R0] | E1 iter[613/614] | [Loss] 12.78 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]  1227 | [url] none | [time] 9.9m (~1319h) |[best] 0 -100.000x1e-2 
+2024-04-24 05:26:24.014 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E2 iter[ 61/614] | [Loss] 16.64 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]  1289 | [url] none 
+2024-04-24 05:27:24.673 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E2 iter[124/614] | [Loss] 17.00 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]  1352 | [url] none 
+2024-04-24 05:28:25.496 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E2 iter[187/614] | [Loss] 17.36 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]  1415 | [url] none 
+2024-04-24 05:29:25.886 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E2 iter[250/614] | [Loss] 17.72 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]  1478 | [url] none 
+2024-04-24 05:30:26.091 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E2 iter[312/614] | [Loss] 18.07 | [exp] ../exp/0424/car/7d96ech_hvae_lion_B4 | [step]  1540 | [url] none
+
+
+
+2024-04-25 01:10:51.148 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E1 iter[ 66/250] | [Loss] 1.85 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]   316 | [url] none 
+2024-04-25 01:11:51.933 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E1 iter[135/250] | [Loss] 1.81 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]   385 | [url] none 
+2024-04-25 01:12:52.282 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E1 iter[204/250] | [Loss] 1.81 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]   454 | [url] none 
+2024-04-25 01:13:32.226 | INFO     | trainers.base_trainer:train_epochs:256 - [R0] | E1 iter[249/250] | [Loss] 1.81 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]   499 | [url] none | [time] 3.7m (~489h) |[best] 0 -100.000x1e-2 
+2024-04-25 01:13:32.233 | INFO     | trainers.base_trainer:save:106 - save model as : ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64/checkpoints/epoch_1_iters_499.pt
+2024-04-25 01:14:32.509 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E2 iter[ 64/250] | [Loss] 1.86 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]   564 | [url] none 
+2024-04-25 01:15:33.080 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E2 iter[133/250] | [Loss] 1.89 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]   633 | [url] none 
+2024-04-25 01:16:33.512 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E2 iter[201/250] | [Loss] 1.91 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]   701 | [url] none 
+2024-04-25 01:17:16.239 | INFO     | trainers.base_trainer:train_epochs:256 - [R0] | E2 iter[249/250] | [Loss] 1.93 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]   749 | [url] none | [time] 3.7m (~491h) |[best] 0 -100.000x1e-2 
+2024-04-25 01:17:16.247 | INFO     | trainers.base_trainer:save:106 - save model as : ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64/checkpoints/epoch_2_iters_749.pt
+2024-04-25 01:18:17.018 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E3 iter[ 65/250] | [Loss] 2.11 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]   815 | [url] none 
+2024-04-25 01:19:17.784 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E3 iter[134/250] | [Loss] 2.15 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]   884 | [url] none 
+2024-04-25 01:20:18.478 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E3 iter[203/250] | [Loss] 2.21 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]   953 | [url] none 
+2024-04-25 01:20:59.815 | INFO     | trainers.base_trainer:train_epochs:256 - [R0] | E3 iter[249/250] | [Loss] 2.25 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]   999 | [url] none | [time] 3.7m (~492h) |[best] 0 -100.000x1e-2 
+2024-04-25 01:20:59.822 | INFO     | trainers.base_trainer:save:106 - save model as : ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64/checkpoints/epoch_3_iters_999.pt
+2024-04-25 01:22:00.469 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E4 iter[ 65/250] | [Loss] 2.53 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]  1065 | [url] none 
+2024-04-25 01:23:01.277 | INFO     | trainers.base_trainer:train_epochs:219 - [R0] | E4 iter[134/250] | [Loss] 2.59 | [exp] ../exp/0425/gauss/5dc88eh_hvae_lion_B4N64 | [step]  1134 | [url] none 
+^CTraceback (most recent call last):

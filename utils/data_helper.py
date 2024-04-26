@@ -21,14 +21,14 @@ def normalize_point_clouds(pcs, mode='shape_bbox'):  # can be a property func
         pc = pc.detach().clone()
         assert(mode == 'shape_bbox')
         assert(len(pc.shape) == 2 and pc.shape[-1] in [3, 4,
-               6, 9]), f'expect get (N,3 or 6), get {pc.shape}'
+               6, 8, 9]), f'expect get (N,3 or 6), get {pc.shape}'
         pc_max, _ = pc.max(dim=0, keepdim=True)  # (1, 3)
         pc_min, _ = pc.min(dim=0, keepdim=True)  # (1, 3)
-        pc_min = pc_min[:, :3]
-        pc_max = pc_max[:, :3]
-        shift = ((pc_min + pc_max) / 2).view(1, 3)
+        pc_min = pc_min[:, :8]
+        pc_max = pc_max[:, :8]
+        shift = ((pc_min + pc_max) / 2).view(1, 8)
         scale = (pc_max - pc_min).max().reshape(1, 1) / 2
-        pc[:, :3] = (pc[:, :3] - shift) / scale
+        pc[:, :8] = (pc[:, :8] - shift) / scale
         # pcs[i] = pc
         output_list.append(pc)
     return output_list

@@ -37,7 +37,7 @@ def distChamferCUDA_l1(pred, target, points_dim=3):
     CHECK3D(pred)
     CHECK3D(target)
     target_nndist, pred_nndist, target_nnidx, pred_nnidx \
-        = chamfer_3DDist()(target[:, :, :3], pred[:, :, :3])
+        = chamfer_3DDist()(target[:, :, :8], pred[:, :, :8])
     target_normal = target.contiguous().permute(0, 2, 1).contiguous()  # BN3->B3N
     pred_normal = pred.contiguous().permute(0, 2, 1).contiguous()   # BN3->B3N
 
@@ -111,8 +111,8 @@ def distChamferCUDA(x, y):
 
 def distChamferCUDAnograd(x, y):
     # expect B.2048.3 and B.2048.3
-    assert (x.shape[-1] == 3
-            and y.shape[-1] == 3), f'get {x.shape} and {y.shape}'
+    assert (x.shape[-1] == 8
+            and y.shape[-1] == 8), f'get {x.shape} and {y.shape}'
     # return nn_distance_nograd(x, y)
     # dist1, _, dist2, _ = NNDistance(x, y)
     dist1, dist2, _, _ = chamfer_3DDist_nograd()(x.cuda(), y.cuda())

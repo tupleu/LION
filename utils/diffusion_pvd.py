@@ -37,6 +37,7 @@ class DiffusionDiscretized(object):
             f'[Build Discrete Diffusion object] beta_start={beta_start}, beta_end={beta_end}, mode={mode}, num_steps={num_steps}')
         self.betas = make_beta_schedule(
             mode, beta_start, beta_end, num_steps).numpy()
+        print(self.betas.shape)
         self._betas_init, self._alphas, self._alpha_bars, self._betas_post_init, self.snr = \
             self._generate_base_constants(
                 diffusion_steps=self._diffusion_steps)

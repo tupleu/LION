@@ -23,7 +23,7 @@ class PVCNN2Unet(nn.Module):
     def __init__(self, 
                  num_classes, embed_dim, use_att, dropout=0.1,
                  extra_feature_channels=3, 
-                 input_dim=3,
+                 input_dim=8,
                  width_multiplier=1, 
                  voxel_resolution_multiplier=1,
                  time_emb_scales=1.0,
@@ -119,13 +119,14 @@ class PVCNN2Unet(nn.Module):
         B = inputs.shape[0]
         coords = inputs[:, :self.input_dim, :].contiguous() 
         features = inputs 
+        # print(inputs.shape, self.input_dim)
         temb = kwargs.get('t', None) 
         if temb is not None:
             t = temb 
             if t.ndim == 0 and not len(t.shape) == 1:
                 t = t.view(1).expand(B)
             temb =  self.embedf(self.get_timestep_embedding(t, inputs.device 
-                ))[:,:,None].expand(-1,-1,inputs.shape[-1])
+                ))[:,:,None].expand(-1,-1,1024)#inputs.shape[-1])
             temb_ori = temb  # B,embed_dim,Npoint 
         
         style = kwargs['style'] 
@@ -138,10 +139,13 @@ class PVCNN2Unet(nn.Module):
 
         coords_list, in_features_list = [], []
         for i, sa_blocks  in enumerate(self.sa_layers):
+            # print(features.shape, i)
             in_features_list.append(features)
             coords_list.append(coords)
             if i > 0 and temb is not None:
                 #TODO: implement a sa_blocks forward function; check if is PVConv layer and kwargs get grid_emb, take as additional input 
+                # print(features.shape,temb.shape)
+                # exit()
                 features = torch.cat([features,temb],dim=1)
                 features, coords, temb, _ = \
                     sa_blocks ((features, 

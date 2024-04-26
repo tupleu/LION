@@ -92,6 +92,57 @@ def generate_samples_vada(shape, dae, diffusion, vae, num_samples,
     return image, nfe_torch, time_ode_solve_torch, sampling_time_torch, output
 
 
+device = 'cuda'
+num_input = 1000
+num_primitives = 64
+num_features = 8
+dir_path = './mnist/all'
+def load_data():
+    data = torch.empty(num_input, num_primitives, num_features).to(device)
+    for i, filename in enumerate(sorted(os.listdir(dir_path))):
+        checkpoint = torch.load(os.path.join(dir_path, filename), map_location=device)
+        positions = checkpoint["positions"]
+        features = checkpoint["features"]
+        transforms = checkpoint["transforms"]
+        d = torch.cat((positions, features, transforms), dim=1)
+        data[i] = d.detach()
+        if i == num_input - 1:
+            break
+
+    # global s
+    # global m
+    v, m = torch.var_mean(data, dim=[0,1])
+    s = torch.sqrt(v)
+    # print(s,m)
+
+    # normalize
+    for i in range(num_features):
+        d = data[:,:,i]
+        data[:,:,i] = (d-m[i]) / s[i] / 3
+
+    s *= 3
+
+    return s,m
+def save_data(data, epoch):
+    print('save_data', data.shape, epoch)
+    s,m = load_data()
+    data = data.detach().clone()
+    input = "./mnist/test/checkpoint.ckpt"
+    output = f"./mnist/test/checkpoint{epoch}.ckpt"
+    checkpoint = torch.load(input, map_location=device)
+    # data = postprocess(to_pil_image(data[0])).reshape((512,8))
+    # print(data.shape)
+    # data = torch.transpose(data,0,1).reshape(512,8)
+    for i in range(num_features):
+        d = data[:,i]
+        data[:,i] = d*s[i] + m[i]
+    # print(data)
+    
+    checkpoint['positions'] = data[:,0:2]
+    checkpoint['features'] = data[:,2:5]
+    checkpoint['transforms'] = data[:,5:8]
+    torch.save(checkpoint, output)
+
 @torch.no_grad()
 def validate_inspect(latent_shape,
                      model, dae, diffusion, ode_sample,
@@ -139,6 +190,8 @@ def validate_inspect(latent_shape,
     vis_order = cfg.viz.viz_order
     vis_args = {'vis_order': vis_order,
                 }
+    # save_data(normalize_point_clouds([gen_x[0]])[0], f'gen{epoch}')
+    save_data(normalize_point_clouds([gen_x[0]])[0], epoch)
     # vis the samples
     if not vis_latent_point and num_samples > 0:
         img_list = []
@@ -155,7 +208,7 @@ def validate_inspect(latent_shape,
         img_list = []
         eps_list = []
         eps = output_dict['sampled_eps'].view(
-            num_samples, dae.num_points, dae.num_classes)[:, :, :3]
+            num_samples, dae.num_points, dae.num_classes)[:, :, :8]
         for i in range(num_samples):
             points = gen_x[i]
             points = normalize_point_clouds([points])[0]
@@ -187,6 +240,7 @@ def validate_inspect(latent_shape,
         gt_list = []
         for i in range(num_recon_val):
             points = normalize_point_clouds([val_x[i]])
+            # save_data(points[0], f'val{epoch}')
             img = visualize_point_clouds_3d(points, ['gt#%d' % i], **vis_args)
             gt_list.append(img)
         img = np.concatenate(img_list, axis=2)
@@ -197,7 +251,7 @@ def validate_inspect(latent_shape,
             # also vis the input, used when we take voxel points as input
             input_list = []
             for i in range(num_recon_val):
-                points = output['vis/latent_pts'][i, :, :3]
+                points = output['vis/latent_pts'][i, :, :8]
                 points = normalize_point_clouds([points])
                 input_img = visualize_point_clouds_3d(
                     points, ['input#%d' % i], **vis_args)

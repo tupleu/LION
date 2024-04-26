@@ -16,7 +16,10 @@ from PIL import Image
 from default_config import cfg as config
 from models.lion import LION
 from utils.vis_helper import plot_points
-from huggingface_hub import hf_hub_download 
+from huggingface_hub import hf_hub_download
+from huggingface_hub import snapshot_download
+
+# snapshot_download("xiaohui2022/lion_ckpt", cache_dir="./lion_ckpt")
 
 model_path = './lion_ckpt/text2shape/chair/checkpoints/model.pt'
 model_config = './lion_ckpt/text2shape/chair/cfg.yml'
@@ -39,7 +42,7 @@ else:
     clip_feat = None
 output = lion.sample(1 if clip_feat is None else clip_feat.shape[0], clip_feat=clip_feat)
 pts = output['points']
-img_name = "/tmp/tmp.png"
+img_name = "./tmp.png"
 plot_points(pts, output_name=img_name)
 img = Image.open(img_name)
 img.show()

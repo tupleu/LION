@@ -12,7 +12,7 @@
 
 docker="nvcr.io/nvidian/lion_env:0"
 echo $PWD
-exit
+# exit
 code_path=$PWD
 docker run --gpus all -p 8081:8081 --ipc=host -v $code_path:$code_path -it $docker bash
 

@@ -770,8 +770,8 @@ class BaseTrainer(ABC):
 
             gen_x = gen_x.cpu()
             val_x = val_x.cpu()
-            gen_x[:, :, :3] = gen_x[:, :, :3] * s + m
-            val_x[:, :, :3] = val_x[:, :, :3] * s + m
+            gen_x[:, :, :8] = gen_x[:, :, :8] * s + m
+            val_x[:, :, :8] = val_x[:, :, :8] * s + m
             gen_pcs.append(gen_x.detach().cpu())
             ref_pcs.append(val_x.detach().cpu())
             if ntest is not None and shape_id_start >= int(ntest):
@@ -805,7 +805,7 @@ class BaseTrainer(ABC):
             torch.save(gen_pcs, output_name)
 
         results = compute_NLL_metric(
-            gen_pcs[:, :, :3], ref_pcs[:, :, :3], device, self.writer, output_name, batch_size=20, step=step)
+            gen_pcs[:, :, :8], ref_pcs[:, :, :8], device, self.writer, output_name, batch_size=20, step=step)
         score = 0
         for n, v in results.items():
             if 'detail' in n:
